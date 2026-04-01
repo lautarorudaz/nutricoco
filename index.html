@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nutri·Salud</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --c1: #272b00;
+            --c2: #54582f;
+            --c3: #86895d;
+            --c4: #bec092;
+            --c5: #f8fbca;
+            --cream: #fafaf4;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--cream);
+            color: var(--c1);
+            overflow-x: hidden;
+        }
+
+        /* ─── CURSOR ─── */
+        body {
+            cursor: none;
+        }
+
+        .cursor {
+            width: 10px;
+            height: 10px;
+            background: var(--c3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--c3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            opacity: 0.6;
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+        }
+
+        /* ─── NAVBAR ─── */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1rem 4rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            background: var(--c1);
+            border-bottom: 1px solid var(--c2);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            letter-spacing: 0.05em;
+            color: var(--c5);
+        }
+
+        .logo span {
+            color: var(--c4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.8rem;
+        }
+
+        .nav-links a {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--c4);
+            text-decoration: none;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 3px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--c4);
+            transition: width 0.35s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--c5);
+        }
+
+        /* ─── HAMBURGER ─── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 4px;
+            z-index: 300;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 1.5px;
+            background: var(--c4);
+            border-radius: 2px;
+            transition: transform 0.35s ease, opacity 0.25s ease;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg);
+        }
+
+        /* ─── MOBILE DROPDOWN MENU ─── */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--c1);
+            border-top: 1px solid var(--c2);
+            z-index: 250;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .mobile-menu.open {
+            max-height: 320px;
+            opacity: 1;
+        }
+
+        .mobile-menu a {
+            width: 100%;
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--c4);
+            text-decoration: none;
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--c2);
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--c5);
+            background: var(--c2);
+        }
+
+        /* ─── HERO FULLSCREEN ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 62px);
+            margin-top: 62px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .hero-iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    transparent 70%,
+                    rgba(39, 43, 0, 0.1) 100%);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            animation: fadeUp 1s 2s ease forwards;
+        }
+
+        .scroll-hint span {
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--c4);
+            font-weight: 700;
+        }
+
+        .scroll-hint .arrow {
+            width: 1px;
+            height: 36px;
+            background: var(--c4);
+            animation: arrowPulse 1.8s 2s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scaleY(1.35);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── SCROLL REVEAL ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.85s ease, transform 0.85s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ─── SECCIONES ─── */
+        .section {
+            padding: 7rem 4rem;
+        }
+
+        .section-tag {
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--c3);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            color: var(--c1);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--c4), transparent);
+            margin: 0 4rem;
+        }
+
+        /* ─── QUÉ ES ─── */
+        .what-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .what-text p {
+            font-size: 0.93rem;
+            color: var(--c2);
+            line-height: 1.95;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .what-image {
+            background: var(--c4);
+            aspect-ratio: 4/5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--c2);
+            font-weight: 700;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .what-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.7s ease;
+        }
+
+        .what-image:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* ─── STATS ─── */
+        .stats-strip {
+            background: var(--c2);
+            padding: 3.5rem 4rem;
+            display: flex;
+            justify-content: center;
+            gap: 7rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--c5);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--c4);
+            font-weight: 700;
+        }
+
+        /* ─── PROCESO ─── */
+        .process-section {
+            padding: 7rem 4rem;
+            background: var(--c1);
+        }
+
+        .process-section .section-tag {
+            color: var(--c4);
+        }
+
+        .process-section .section-title {
+            color: var(--c5);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-tag-center {
+            text-align: center;
+            display: block;
+        }
+
+        .process-sub {
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--c4);
+            font-weight: 300;
+            margin-bottom: 5rem;
+            line-height: 1.8;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            max-width: 940px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2.5rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:nth-child(1) {
+            transition-delay: 0s;
+        }
+
+        .step:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .step:nth-child(3) {
+            transition-delay: 0.4s;
+        }
+
+        .step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -10px;
+            top: 42px;
+            color: var(--c3);
+            font-size: 1.4rem;
+        }
+
+        .step-num {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1.5px solid var(--c3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.4rem;
+            transition: background 0.3s;
+        }
+
+        .step:hover .step-num {
+            background: var(--c3);
+        }
+
+        .step-num svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--c4);
+            stroke-width: 1.5;
+            fill: none;
+            transition: stroke 0.3s;
+        }
+
+        .step:hover .step-num svg {
+            stroke: var(--c1);
+        }
+
+        .step-name {
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--c4);
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--c5);
+            margin-bottom: 0.7rem;
+        }
+
+        .step-desc {
+            font-size: 0.82rem;
+            color: var(--c3);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* ─── QUIÉN SOY ─── */
+        .about-section {
+            padding: 7rem 4rem;
+            background: var(--cream);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .about-image-wrap {
+            position: relative;
+        }
+
+        .about-image {
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: 2rem 2rem 6rem 2rem;
+            overflow: hidden;
+            background: var(--c4);
+            box-shadow: 0 20px 60px rgba(39, 43, 0, 0.12);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            color: var(--c2);
+        }
+
+        .about-image-placeholder svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--c3);
+            stroke-width: 1.2;
+            fill: none;
+            opacity: 0.6;
+        }
+
+        .about-image-placeholder span {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--c3);
+            font-weight: 700;
+        }
+
+        .about-badge {
+            position: absolute;
+            bottom: -1.5rem;
+            right: -1.5rem;
+            width: 90px;
+            height: 90px;
+            background: var(--c2);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(39, 43, 0, 0.18);
+        }
+
+        .about-badge span:first-child {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--c5);
+            line-height: 1;
+        }
+
+        .about-badge span:last-child {
+            font-size: 0.55rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--c4);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .about-text .section-tag {
+            margin-bottom: 0.5rem;
+        }
+
+        .about-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.1rem;
+            color: var(--c1);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .about-name em {
+            font-style: italic;
+            color: var(--c3);
+        }
+
+        .about-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .about-bullets li {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            color: var(--c2);
+            line-height: 1.75;
+            font-weight: 300;
+        }
+
+        .about-bullets li::before {
+            content: '';
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c3);
+            margin-top: 0.65rem;
+        }
+
+        .about-bullets strong {
+            color: var(--c1);
+            font-weight: 700;
+        }
+
+        .about-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--c2);
+            color: var(--c5);
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 2rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .about-cta:hover {
+            background: var(--c1);
+            transform: translateY(-2px);
+        }
+
+        .about-cta svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            transition: transform 0.3s;
+        }
+
+        .about-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .about-badge {
+                right: 1rem;
+            }
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--c1);
+            border-top: 1px solid var(--c2);
+            padding: 2.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--c4);
+            letter-spacing: 0.05em;
+        }
+
+        .footer-logo span {
+            color: var(--c3);
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--c3);
+            letter-spacing: 0.08em;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .what-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step:not(:last-child)::after {
+                content: '↓';
+                right: auto;
+                bottom: -10px;
+                left: 50%;
+                top: auto;
+            }
+
+            .stats-strip {
+                flex-direction: column;
+                gap: 2.5rem;
+                align-items: center;
+            }
+
+            .section {
+                padding: 4rem 1.5rem;
+            }
+
+            .about-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .process-section {
+                padding: 4rem 1.5rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 0.75rem;
+                text-align: center;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ─── NAVBAR ─── -->
+    <nav id="navbar">
+        <div class="logo">NUTRI<span>·</span>COCO</div>
+        <div class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="#sobre-mi">Sobre mí</a>
+            <a href="contacto.html">Contacto</a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <!-- ─── MOBILE MENU (inside nav so position:absolute top:100% works) ─── -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#" id="mlink1">Inicio</a>
+            <a href="#sobre-mi" id="mlink2">Sobre mí</a>
+            <a href="contacto.html" id="mlink3">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero">
+        <iframe src="flyer.html" class="hero-iframe" scrolling="no" frameborder="0" title="Flyer NUTRICOCO"></iframe>
+        <div class="hero-overlay"></div>
+        <div class="scroll-hint">
+            <span>scroll</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─── QUÉ ES ─── -->
+    <section class="section" id="que-es">
+        <div class="what-grid">
+            <div class="what-text reveal-left">
+                <span class="section-tag">¿Qué es la nutrición?</span>
+                <h2 class="section-title">Por qué es tan<br>importante para vos</h2>
+                <p>La nutrición va mucho más allá de lo que comemos. Es la base sobre la que construimos energía,
+                    claridad mental y bienestar duradero.</p>
+                <p>Cada cuerpo es único, y por eso cada plan también lo es. Trabajamos juntos para entender tus
+                    necesidades y encontrar el equilibrio que funcione para tu vida.</p>
+                <p>No se trata de restricciones, sino de aprender a nutrir tu cuerpo con lo que realmente necesita.</p>
+            </div>
+            <div class="what-image reveal-right"><img src="/media/PAGINA-31-NOTA-SALUD_480x480.webp" alt=""></div>
+        </div>
+    </section>
+
+    <!-- ─── STATS ─── -->
+    <div class="stats-strip">
+        <div class="stat reveal">
+            <span class="stat-num" data-target="100">0</span>
+            <span class="stat-label">Pacientes acompañados</span>
+        </div>
+        <div class="stat reveal" style="transition-delay:0.15s">
+            <span class="stat-num" data-target="2">0</span>
+            <span class="stat-label">Años de experiencia</span>
+        </div>
+        <div class="stat reveal" style="transition-delay:0.3s">
+            <span class="stat-num" data-target="100">0</span>
+            <span class="stat-label">Planes personalizados</span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── PROCESO ─── -->
+    <section class="process-section" id="proceso">
+        <span class="section-tag section-tag-center reveal">El camino</span>
+        <h2 class="section-title reveal">Cómo será nuestro proceso</h2>
+        <p class="process-sub reveal">
+            La modalidad de trabajo difiere para cada paciente.<br>
+            Todo sea para tu salud.
+        </p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M8 2v4M16 2v4M3 9h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                    </svg>
+                </div>
+                <p class="step-name">Paso 01</p>
+                <p class="step-title">Primera consulta</p>
+                <p class="step-desc">Nos comunicamos vía email o de forma presencial para conocernos.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <p class="step-name">Paso 02</p>
+                <p class="step-title">Plan personalizado</p>
+                <p class="step-desc">Se logra un plan alimenticio basado en tus objetivos y necesidades.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                </div>
+                <p class="step-name">Paso 03</p>
+                <p class="step-title">Seguimiento continuo</p>
+                <p class="step-desc">Estarás en constante seguimiento para ver los avances y ajustar el camino.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── QUIÉN SOY ─── -->
+    <div class="divider"></div>
+    <section class="about-section" id="sobre-mi">
+        <div class="about-grid">
+            <div class="about-image-wrap reveal-left">
+                <div class="about-image">
+                    <!-- Reemplazá este bloque por: <img src="tu-foto.jpg" alt="Nombre"> -->
+                    <img src="/media/WhatsApp Image 2026-04-01 at 08.58.57.jpeg" alt="">
+                </div>
+                <div class="about-badge">
+                    <span>2+</span>
+                    <span>años de<br>experiencia</span>
+                </div>
+            </div>
+
+            <div class="about-text reveal-right">
+                <span class="section-tag">¿Quién soy?</span>
+                <h2 class="about-name">Conocé a<br><em>Sol Martina</em></h2>
+                <ul class="about-bullets">
+                    <li>Nutricionista especializada en <strong>comportamiento alimentar y cambio de hábitos</strong>.
+                    </li>
+                    <li>Más de <strong>2 años</strong> acompañando pacientes a mejorar su relación con la comida y
+                        conquistar una rutina organizada sin dietas restrictivas.</li>
+                    <li>Mi enfoque une ciencia, acompañamiento y estrategias simples que funcionan en la vida real.</li>
+                </ul>
+                <a href="#proceso" class="about-cta">
+                    Agendá una consulta
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <div class="footer-logo">NUTRI<span>·</span>COCO</div>
+        <p>© 2025 · Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // ── CURSOR ──
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function loop() {
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+            requestAnimationFrame(loop);
+        })();
+        document.querySelectorAll('a, .step').forEach(el => {
+            el.addEventListener('mouseenter', () => { ring.style.width = '54px'; ring.style.height = '54px'; ring.style.opacity = '1'; });
+            el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '0.6'; });
+        });
+
+        // ── HAMBURGER ──
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        });
+        // Cerrar al clickear un link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // nav siempre sólido — nada que hacer
+
+        // ── SCROLL REVEAL ──
+        const revealObs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
+
+        // ── STEPS ──
+        const stepObs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.step').forEach(el => stepObs.observe(el));
+
+        // ── CONTADORES ──
+        function animateCount(el, target) {
+            const dur = 1600, start = performance.now();
+            (function tick(now) {
+                const p = Math.min((now - start) / dur, 1);
+                el.textContent = Math.floor(p * target) + (p >= 1 ? '+' : '');
+                if (p < 1) requestAnimationFrame(tick);
+            })(performance.now());
+        }
+        const statObs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const num = e.target.querySelector('.stat-num');
+                    if (num && !num.dataset.done) { num.dataset.done = '1'; animateCount(num, +num.dataset.target); }
+                }
+            });
+        }, { threshold: 0.4 });
+        document.querySelectorAll('.stat').forEach(s => statObs.observe(s));
+    </script>
+</body>
+
+</html>
